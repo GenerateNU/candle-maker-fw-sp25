@@ -1,4 +1,4 @@
-name: Generate Hardware CI/CD
+name: CandleMaker CI/CD
 
 on:
     push:
