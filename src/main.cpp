@@ -2,25 +2,20 @@
 
 // You can declare functions at the top!
 
-// Pin number for the LED
-const int ledPin = 13; // Change this if your LED is connected to a different pin
+//therm pin constant
+const int thermistorPin = 35;
 
 void setup() {
   Serial.begin(115200);
   // Set the LED pin as an output
-  pinMode(ledPin, OUTPUT);
+  pinMode(thermistorPin, INPUT);
+  analogReadResolution(12);
+  Serial.println('setup complete');
 }
 
 void loop() {
-  // Turn the LED on
-  digitalWrite(ledPin, HIGH);
-  delay(1000); // Wait for 1 second
-  Serial.println("LED is on\n");
-
-  // Turn the LED off
-  digitalWrite(ledPin, LOW);
-  delay(1000); // Wait for 1 second
-  Serial.println("LED is on\n");
+  u_int8_t thermValue = analogRead(thermistorPin);
+  Serial.println(thermValue);
 
 }
 
