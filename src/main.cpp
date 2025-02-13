@@ -25,13 +25,19 @@ void loop() {
   double temp = 0;
   digitalWrite(sourcePin, 255);
   delayMicroseconds(10000);
+
+  // analog read millivolts -> volts
   double pinVoltage = analogReadMilliVolts(thermistorPin) / 1000.0;
   Serial.print("pinVoltage: ");
   Serial.print(pinVoltage);
+
+  // voltage divider equation for applied 3V3
   double rTherm = 183810.0/pinVoltage - 55700.0;
   Serial.print(" rTherm: ");
   Serial.print(rTherm);
+
   // if temp is under 25 we know resistance will be greater than 30000 ohm
+  // equations from ntc spreadsheet
   if (rTherm > 30000.0) {
     temp = 1/(A1[0]+B[0]*log(rTherm/30000.0)+C1[0]*pow(log(rTherm/30000.0),2)+D1[0]*pow(log(rTherm/30000.0),3))-273.15;
   }
