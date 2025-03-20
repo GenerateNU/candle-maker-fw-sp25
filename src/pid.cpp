@@ -24,7 +24,8 @@ PID::PID() {
     limMin = 0.0f;
     limMax = 0.0f;
     Kp = 0.1f;
-
+    Kd = 0.1f;
+    Kp = 0.01f;
     out = 0.0f;
 }
 
@@ -43,10 +44,11 @@ PID::PID(float minOut, float maxOut, float setpoint) {
 
 float PID::update(float setpoint) {
     //current temp is measurement
+    unsigned long startTime = micros();
     float measurement = readThermTemp();
     float error = setpoint - measurement;
 
-    // Proportional
+    // Proportional term
     float proportional = Kp * error;
 
     // Integral term
@@ -94,7 +96,8 @@ float PID::update(float setpoint) {
     
     prevError = error;
     prevMeasurement = measurement;
-    
+    unsigned long endTime = micros();
+    Serial.printf("Time to execute one iteration of loop: {endTime - startTime}");
     return out;
 }
 
