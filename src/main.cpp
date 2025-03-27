@@ -1,27 +1,18 @@
-#include <Arduino.h>
+// YourArduinoSketch.ino
 
-// You can declare functions at the top!
+// include your class header files here
+#include "LEDBlinker.h"
 
-// Pin number for the LED
-const int ledPin = 13; // Change this if your LED is connected to a different pin
+LEDBlinker myLED(25); // Change 13 to the pin your LED is connected to
+LEDBlinker myLED2(26); // If you wanted to add a second instance of the class
 
 void setup() {
-  Serial.begin(115200);
-  // Set the LED pin as an output
-  pinMode(ledPin, OUTPUT);
+  // No setup needed for this example
+  Serial.begin(9600);
 }
 
 void loop() {
-  // Turn the LED on
-  digitalWrite(ledPin, HIGH);
-  delay(1000); // Wait for 1 second
-  Serial.println("LED is on\n");
+  myLED.blink(500); // Blink every 500 milliseconds
 
-  // Turn the LED off
-  digitalWrite(ledPin, LOW);
-  delay(1000); // Wait for 1 second
-  Serial.println("LED is on\n");
-
+  // need to add something else
 }
-
-// and then put the function definitions later!
