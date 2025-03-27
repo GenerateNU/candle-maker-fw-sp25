@@ -12,6 +12,8 @@ void setup() {
 void loop() {
   myLED.blink(500); // Blink every 500 milliseconds
   myLED.turnOn(); // Turn the LED on
+
+  // need to add something else
 }
 
 
