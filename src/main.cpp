@@ -4,8 +4,6 @@
 //therm pin constant
 const int fetPin = 15;
 
-// sampling interval in ms
-const int samplingInterval = 1000;
 
 PID pid_controller(-127, 120, 55);
 
