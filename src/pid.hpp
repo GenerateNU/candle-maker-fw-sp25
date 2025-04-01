@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #ifndef PID_HPP
 #define PID_HPP
-#define THERM_PIN 31
+#define THERM_PIN 4
 
 const float A1[2]	= {0.003353823,	0.003354016};
 const float B[2] = {0.000261843,	0.00026056};
@@ -37,7 +37,7 @@ class PID {
         float limMax;
         float out;
 
-        float update(float setpoint);
+        float update(float setpoint = 55.0f);
         float readThermTemp();
         PID();
         PID(float minOut, float maxOut, float setpoint);
