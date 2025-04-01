@@ -1,25 +1,27 @@
 #include <Arduino.h>
-#include <pid.hpp>
+#include <CMStateMachine.hpp>
 
 //therm pin constant
 const int fetPin = 15;
-const int samplingInterval = 200;
+
+// sampling interval in ms
+const int samplingInterval = 1000;
 
 PID pid_controller(-127, 120, 55);
 
-void pidTask(void *parameter) {
-  const TickType_t xFreqeuncy = pdMS_TO_TICKS(100);
-  TickType_t xLastWakeTime = xTaskGetTickCount();
 
-  while(true) {
-    pid_controller.update();
-    vTaskDelayUntil(&xLastWakeTime, xFreqeuncy);
+
+void test_task(void *parameter) {
+  while (true) {
+      Serial.println("Task 1 is running");
+      vTaskDelay(1000 / portTICK_PERIOD_MS); // Delay for 1 second
   }
 }
 
+
 void setup() {
-  // No setup needed for this example
   Serial.begin(115200);
+  while (!Serial) {}
   // pinMode(sourcePin, OUTPUT);
   pinMode(fetPin, OUTPUT);
   pid_controller.Kp = 8.0f;
@@ -28,9 +30,10 @@ void setup() {
   pid_controller.T = static_cast<float>(samplingInterval) / 1000.0f;
   pid_controller.tau = 0.1f;
   
-  Serial.printf("Kp: %.2f | Ki: %.2f | Kd: %.2f\n",pid_controller.Kp, pid_controller.Ki, pid_controller.Kd);
+  // Serial.printf("Kp: %.2f | Ki: %.2f | Kd: %.2f\n",pid_controller.Kp, pid_controller.Ki, pid_controller.Kd);
   Serial.println("setup complete");
-  // xTaskCreate(pidTask, "PID Task", 1000, NULL, 1, NULL);
+  delay(10);
+  xTaskCreate(test_task, "test task", 128, NULL, 1, NULL);
 }
 
 void loop() {
@@ -42,6 +45,7 @@ void loop() {
   delay(samplingInterval - 12);
   int endTime = millis();
   Serial.printf("loop took %d seconds\n", endTime - startTime);
+
   // // Serial.print("pinVoltage: ");
   // // Serial.print(pinVoltage);
   // // Serial.print(" rTherm: ");
