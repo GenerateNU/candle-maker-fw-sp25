@@ -47,18 +47,19 @@ PID::PID(float minOut, float maxOut, float setpoint) {
 
 float PID::update(float setpoint) {
     //current temp is measurement
-    unsigned long startTime = micros();
+    // unsigned long startTime = micros();
     float measurement = readThermTemp();
     Serial.printf("%.2f deg C, %.2f deg F\n", measurement, measurement*1.8 + 32.0);
 
     float error = setpoint - measurement;
     Serial.printf("Error: %.4f |", error);
+
     // Proportional term
     float proportional = Kp * error;
     Serial.printf("Proportional: %.4f |", proportional);
+
     // Integral term
     integrator = integrator + 0.5f * Ki * T * (error + prevError);
-    Serial.printf("Integrator: %.4f |", integrator);
 
 
     // Integrator dynamic limits
@@ -85,10 +86,12 @@ float PID::update(float setpoint) {
     else if (integrator > limMaxInt) {
         integrator  = limMaxInt;
     }
+    Serial.printf("Integrator: %.4f |", integrator);
+
 
     //Derivative term (bandlimited differentiator)
     differentiator = (2.0f * Kd * (measurement - prevMeasurement)
-    + ((2.0f * tau - T)) * differentiator
+    + (2.0f * tau - T) * differentiator
     / (2.0f * tau + T));
 
     Serial.printf("Differentiator: %.4f |", differentiator);
@@ -105,7 +108,7 @@ float PID::update(float setpoint) {
 
     prevError = error;
     prevMeasurement = measurement;
-    unsigned long endTime = micros();
+    // unsigned long endTime = micros();
     // Serial.printf("Time to execute one iteration of loop: %2f\n", endTime - startTime);
     return out;
 }
