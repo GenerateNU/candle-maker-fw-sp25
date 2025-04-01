@@ -1,5 +1,5 @@
 #pragma once
-#include "candleState.hpp"
+#include "CandleState.hpp"
 #include "CMStateMachine.hpp"
 //TODO: see if this is useful
 class CandleStandby : public CandleState 

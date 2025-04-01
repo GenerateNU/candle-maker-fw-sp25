@@ -1,5 +1,14 @@
 #include "CMStateMachine.hpp"
-
+//consts
+std::map<CANDLE_STATES,CANDLE_STATES> candleTransitions = {
+    {CANDLE_STATES::STANDBY, CANDLE_STATES::HEATING},
+    {CANDLE_STATES::HEATING, CANDLE_STATES::DISPENSING},
+    {CANDLE_STATES::DISPENSING, CANDLE_STATES::MIXING},
+    {CANDLE_STATES::MIXING, CANDLE_STATES::WICK_PLACEMENT},
+    {CANDLE_STATES::WICK_PLACEMENT, CANDLE_STATES::COOLING},
+    {CANDLE_STATES::COOLING, CANDLE_STATES::EJECTING},
+    {CANDLE_STATES::EJECTING, CANDLE_STATES::STANDBY}
+    };
 //tasks
 void pidTask(void *parameter) {
     StateMachine* stateMachine = static_cast<StateMachine*>(parameter);
