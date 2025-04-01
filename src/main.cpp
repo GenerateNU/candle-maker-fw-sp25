@@ -12,7 +12,7 @@ void pidTask(void *parameter) {
   TickType_t xLastWakeTime = xTaskGetTickCount();
 
   while(true) {
-    float output = pid_controller.update();
+    pid_controller.update();
     vTaskDelayUntil(&xLastWakeTime, xFreqeuncy);
   }
 }
@@ -21,7 +21,7 @@ void setup() {
   Serial.begin(115200);
   // pinMode(sourcePin, OUTPUT);
   pinMode(fetPin, OUTPUT);
-  pid_controller.Kp = 10.0f;
+  pid_controller.Kp = 8.0f;
   pid_controller.Ki = 0.2f;
   pid_controller.Kd = 0.4f;
   pid_controller.T = static_cast<float>(samplingInterval) / 1000.0f;
