@@ -2,6 +2,7 @@
 #define CMSTATEMACHINE_HPP
 #include "CandleState.hpp"
 #include "pid.hpp"
+#include <list>
 
 // constants
 //sampling interval for PID

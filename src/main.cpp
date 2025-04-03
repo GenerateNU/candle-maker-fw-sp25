@@ -31,7 +31,7 @@ void setup() {
   // Serial.printf("Kp: %.2f | Ki: %.2f | Kd: %.2f\n",pid_controller.Kp, pid_controller.Ki, pid_controller.Kd);
   Serial.println("setup complete");
   delay(10);
-  xTaskCreate(test_task, "test task", 128, NULL, 1, NULL);
+  xTaskCreate(test_task, "test task", 2048, NULL, 1, NULL);
 }
 
 void loop() {
@@ -42,7 +42,7 @@ void loop() {
   analogWrite(fetPin, pid_out);
   delay(samplingInterval - 12);
   int endTime = millis();
-  Serial.printf("loop took %d seconds\n", endTime - startTime);
+  Serial.printf("loop took %d milliseconds\n", endTime - startTime);
 
   // // Serial.print("pinVoltage: ");
   // // Serial.print(pinVoltage);

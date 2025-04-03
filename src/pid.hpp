@@ -16,6 +16,7 @@ class PID {
         float prevError;
         float differentiator;
         float prevMeasurement;
+        float error;
     
     public:
         // proportional gain
@@ -39,6 +40,8 @@ class PID {
 
         float update(float setpoint = 55.0f);
         float readThermTemp();
+        float get_error();
+        float get_prevError();
         PID();
         PID(float minOut, float maxOut, float setpoint);
         ~PID();   

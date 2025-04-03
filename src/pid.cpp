@@ -16,6 +16,13 @@ float PID::readThermTemp() {
     return temp;
 }
 
+float PID::get_error() {
+    return this->error;
+}
+
+float PID::get_prevError() {
+    return this->prevError;
+}
 PID::PID() {
     setpoint = 0.0f;
     integrator = 0.0f;
@@ -51,7 +58,7 @@ float PID::update(float setpoint) {
     float measurement = readThermTemp();
     Serial.printf("%.2f deg C, %.2f deg F\n", measurement, measurement*1.8 + 32.0);
 
-    float error = setpoint - measurement;
+    error = setpoint - measurement;
     Serial.printf("Error: %.4f |", error);
 
     // Proportional term
