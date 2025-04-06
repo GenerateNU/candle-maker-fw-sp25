@@ -5,8 +5,7 @@
 const int fetPin = 15;
 
 
-PID pid_controller(-127, 120, 55);
-
+CMStateMachine stateMachine;
 
 
 void test_task(void *parameter) {
@@ -20,15 +19,8 @@ void test_task(void *parameter) {
 void setup() {
   Serial.begin(115200);
   while (!Serial) {}
-  // pinMode(sourcePin, OUTPUT);
   pinMode(fetPin, OUTPUT);
-  pid_controller.Kp = 8.0f;
-  pid_controller.Ki = 0.2f;
-  pid_controller.Kd = 0.4f;
-  pid_controller.T = static_cast<float>(samplingInterval) / 1000.0f;
-  pid_controller.tau = 0.1f;
   
-  // Serial.printf("Kp: %.2f | Ki: %.2f | Kd: %.2f\n",pid_controller.Kp, pid_controller.Ki, pid_controller.Kd);
   Serial.println("setup complete");
   delay(10);
   xTaskCreate(test_task, "test task", 2048, NULL, 1, NULL);
@@ -37,16 +29,9 @@ void setup() {
 void loop() {
 
   int startTime = millis();
-  float out = pid_controller.update(45.0);
-  int pid_out = static_cast<int>(out) + 127;
-  analogWrite(fetPin, pid_out);
-  delay(samplingInterval - 12);
+  stateMachine.go();
   int endTime = millis();
+  stateMachine.nextState();
   Serial.printf("loop took %d milliseconds\n", endTime - startTime);
 
-  // // Serial.print("pinVoltage: ");
-  // // Serial.print(pinVoltage);
-  // // Serial.print(" rTherm: ");
-  // // Serial.print(rTherm);
-  // Serial.print(" temp: ");
 }

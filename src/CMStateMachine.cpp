@@ -19,7 +19,7 @@ void pidTask(void *parameter) {
     //we pass a reference to the state machine as parameter,
     // then cast it top the StateMachine class in here so we can access the pid in the scope of this task
 
-    StateMachine* stateMachine = static_cast<StateMachine*>(parameter);
+    CMStateMachine* stateMachine = static_cast<CMStateMachine*>(parameter);
 
     //defines the amount of time in between updates in ticks instead of ms
     const TickType_t xFrequency = pdMS_TO_TICKS(samplingInterval);
@@ -41,7 +41,11 @@ void pidTask(void *parameter) {
     }
   } 
 
-int StateMachine::go() {
+CMStateMachine::CMStateMachine() : cm_pid(nullptr) {
+    this->setState(CANDLE_STATES::STANDBY);    
+}
+
+int CMStateMachine::go() {
     switch (this->currentState) {
         case CANDLE_STATES::STANDBY: {
             // cleans up pid stuff when intializing standby state
@@ -54,7 +58,6 @@ int StateMachine::go() {
                 cm_pid = nullptr;
                 Serial.println("deleted cm_pid in standby");
             }
-            break;
             //screen on,
             //poll user input or make it an interrupt,
             
@@ -69,14 +72,14 @@ int StateMachine::go() {
                 Serial.printf("T = %.4f", cm_pid->T);
 
                 //create task and pass pointer to state machine to be able to update PID within task
-                xTaskCreate(pidTask, "update PID", 1024, this, 1, &pidTaskHandle);
+                xTaskCreate(pidTask, "update PID", 2048, this, 1, &pidTaskHandle);
             }
             break;
         }
         case CANDLE_STATES::HEATING: {
-            //Linked list to store previous error
+            //Linked list to store previous error over 1 second
             std::list<float> errorList;
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < samplingInterval; i++) {
                 errorList.push_back(500.0f);
             }
             
@@ -93,8 +96,9 @@ int StateMachine::go() {
                 for (float errorVal : errorList) {
                     sum += errorVal;
                 }
-                // the sum of the error terms needs to be less than 2.5 over 10 samples
+                // the sum of the error terms needs to be less than 1.25 over 200 samples
                 if (sum < 1.25f) {
+                    Serial.printf("sum is %.3f\n", sum);
                     break;
                 }
             }
@@ -119,14 +123,13 @@ int StateMachine::go() {
     return 0;
 }
 
-void StateMachine::nextState() {
+void CMStateMachine::nextState() {
     switch (this->currentState) {
         case CANDLE_STATES::STANDBY:
         // clean up anything from standby, probably transition ui stuff
             break;
         case CANDLE_STATES::HEATING:
         
-            // TODO: ASK SHREYAS IF THE HEATING SHOULD BE RUNNING WHILE DISPENSING IS HAPPENING
             break;
         case CANDLE_STATES::DISPENSING:
             break;
@@ -137,6 +140,6 @@ void StateMachine::nextState() {
     Serial.println(this->currentState);
 }
 
-void StateMachine::setState(CANDLE_STATES newState) {
+void CMStateMachine::setState(CANDLE_STATES newState) {
     this->currentState = newState;
 }

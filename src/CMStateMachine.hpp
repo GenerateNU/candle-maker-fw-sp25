@@ -10,11 +10,11 @@ const int samplingInterval = 200;
 
 
 
-class StateMachine {
+class CMStateMachine {
 
 public:
-    StateMachine() : cm_pid(nullptr) {}
-    ~StateMachine() { delete cm_pid; }
+    CMStateMachine();
+    ~CMStateMachine() { delete cm_pid; }
     //this method is called to go to the next state as defined by the state map candleTransitions.
     void nextState();
     void setState(CANDLE_STATES newState);
