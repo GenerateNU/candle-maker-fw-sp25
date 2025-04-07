@@ -9,14 +9,15 @@ class MotorDriver {
     MotorDriver(int pwmPin, int inAPin, int inBPin);
     void runMotor(int speed, bool direction); // speed in %, direction: true for clockwise, false for counter-clockwise
     void stopMotor();
+    int _speed;
+    bool _direction;
 
   private:
     int _pwmPin;
     int _inAPin;
     int _inBPin;
     int _speedpercent;
-    int _speed;
-    bool _direction;
+    
    
 };
 

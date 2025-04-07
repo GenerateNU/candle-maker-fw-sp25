@@ -11,25 +11,26 @@ class MotorEncoder : public MotorDriver {
     static void encoderISR();
     int getCurrentPosition();
     void goToTargetPosition(int speed, bool direction, int targetPosition);
-    void moveByAmount(int speed, bool direction, int moveAmount);
+    void moveByRotation(int speed, bool direction, double numRotations, double gearRatio);
     void goHome(int speed);
     volatile int currentPosition;
     int _encPinA;
     int _encPinB;
     void setup(int encPinA, int encPinB);
-    static int previousPin[4][2];
+    int previousA;
+    int previousB;
     static int triggeredPin;
     static int triggeredMotor;
     static MotorEncoder* instance[4]; // Array of pointers to MotorEncoder instances
     
+    
 
     private:
-    int _targetPosition;
+    double _targetPosition;
     //int previousEncA;
     //int previousEncB;
-    int moveAmount;
-    int gearRatio;
-    
+    //double targetPosition;
+    double _gearRatio;
 
     
 

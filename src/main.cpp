@@ -107,24 +107,17 @@ void loop() {
 */
 
 #include <MotorEncoder.h>
-
 MotorEncoder motor(4, 19, 21, 18, 5, 172); // Initialize motor driver with PWM and direction pins
 //MotorDriver motor1(4, 19, 21); // Initialize motor driver with PWM and direction pins
 void setup() {
     Serial.begin(9600);
-    motor.setup(18, 5); // Setup encoder pins
-    motor.runMotor(80, true); // Run motor at 80% speed in clockwise direction
-    delay(5000); // Run for 5 seconds
-    motor.stopMotor(); // Stop motor
-    Serial.print("Current Position: ");
-    Serial.print(motor.getCurrentPosition()); // Get current position
-    delay(1000);
-    //std::cout<<"position: " << motor.getCurrentPosition()<<std::endl; // Get current position
-    
 }
 
 void loop() {
-    
-    
+  motor.setup(18, 5); // Setup encoder pins
+  motor.moveByRotation(80, true, 1, 171.79); // Run motor at 80% speed in clockwise direction
+  motor.getCurrentPosition(); // Get current position
 }
+
+
   
