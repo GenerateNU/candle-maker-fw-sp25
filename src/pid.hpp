@@ -36,6 +36,8 @@ class PID {
         float setpoint;
         float limMin;
         float limMax;
+        float limMaxInt;
+        float limMinInt;
         float out;
 
         float update(float setpoint = 55.0f);

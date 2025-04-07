@@ -30,6 +30,8 @@ PID::PID() {
     prevMeasurement = 0.0f;
     limMin = 0.0f;
     limMax = 0.0f;
+    limMaxInt = 0.0f;
+    limMinInt = 0.0f;
     Kp = 0.0f;
     Ki = 0.0f;
     Kd = 0.0f;
@@ -39,6 +41,8 @@ PID::PID() {
 PID::PID(float minOut, float maxOut, float setpoint) {
     limMin = minOut;
     limMax = maxOut;
+    limMaxInt = maxOut;
+    limMinInt = minOut;
     setpoint = setpoint;
     integrator = 0.0f;
     differentiator = 0.0f;
@@ -66,26 +70,8 @@ float PID::update(float setpoint) {
     Serial.printf("Proportional: %.4f |", proportional);
 
     // Integral term
-    integrator = integrator + 0.5f * Ki * T * (error + prevError);
-
-
-    // Integrator dynamic limits
-    float limMaxInt, limMinInt;
-    
+    integrator = integrator + 0.5f * Ki * T * (error + prevError);    
     //anti-windup in integrator - creates a maximum value for integrator term
-    if (limMax > proportional) {
-        limMaxInt = limMax - proportional;
-    }
-    else {
-        limMaxInt = 0.0f;
-    }
-
-    if (limMin < proportional) {
-        limMinInt = limMin - proportional;
-    }
-    else {
-        limMinInt = 0.0f;
-    }
 
     if (integrator < limMinInt) {
         integrator = limMinInt;
@@ -93,7 +79,7 @@ float PID::update(float setpoint) {
     else if (integrator > limMaxInt) {
         integrator  = limMaxInt;
     }
-    Serial.printf("Integrator: %.4f |", integrator);
+    Serial.printf("Integrator: %.4f | ", integrator);
 
 
     //Derivative term (bandlimited differentiator)

@@ -7,7 +7,9 @@
 // constants
 //sampling interval for PID
 const int samplingInterval = 200;
-
+const int fetPin = 15;
+const int heatingResolution = 8;
+const int heatPwmChannel = 0;
 
 
 class CMStateMachine {

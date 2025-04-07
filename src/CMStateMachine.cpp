@@ -12,7 +12,7 @@ std::map<CANDLE_STATES,CANDLE_STATES> candleTransitions = {
     };
 
 //mutex (mutual exclusion) to allow the state machine to access the pid stuff while the pid task is running
-SemaphoreHandle_t errorMutex;
+SemaphoreHandle_t errorMutex = xSemaphoreCreateMutex();
 
 //tasks
 void pidTask(void *parameter) {
@@ -29,7 +29,9 @@ void pidTask(void *parameter) {
         if (stateMachine->cm_pid){ 
             // takes the semaphore (which means we can safely perform update)
             if(xSemaphoreTake(errorMutex, portMAX_DELAY) == pdTRUE) {
-                stateMachine->cm_pid->update();
+                stateMachine->cm_pid->update(71.1f);
+                int heatDutyCycle = static_cast<int>(stateMachine->cm_pid->out) + 127;
+                ledcWrite(heatPwmChannel, 255);
                 xSemaphoreGive(errorMutex);
             }
             Serial.println("pid task is running");
@@ -63,13 +65,15 @@ int CMStateMachine::go() {
             
             // Shruz just told me the heating should turn on during standby and 
             if (!cm_pid) {
-                cm_pid = new PID(-127, 120, 55);
+                cm_pid = new PID(-127, 128, 55);
                 cm_pid->Kp = 8.0f;
                 cm_pid->Ki = 0.2f;
                 cm_pid->Kd = 0.1f;
-                cm_pid->tau = 0.05f;
+                cm_pid->tau = 0.025f;
+                cm_pid->limMaxInt = 50.0f;
+                cm_pid->limMinInt = -50.0f;
                 cm_pid->T = static_cast<float>(samplingInterval) / 1000.0f;
-                Serial.printf("T = %.4f", cm_pid->T);
+                Serial.printf("T = %.4f\n", cm_pid->T);
 
                 //create task and pass pointer to state machine to be able to update PID within task
                 xTaskCreate(pidTask, "update PID", 2048, this, 1, &pidTaskHandle);
@@ -79,7 +83,7 @@ int CMStateMachine::go() {
         case CANDLE_STATES::HEATING: {
             //Linked list to store previous error over 1 second
             std::list<float> errorList;
-            for (int i = 0; i < samplingInterval; i++) {
+            for (int i = 0; i < samplingInterval*2; i++) {
                 errorList.push_back(500.0f);
             }
             
@@ -102,7 +106,8 @@ int CMStateMachine::go() {
                     break;
                 }
             }
-        
+            // wait 2 minutes for wax to melt completely
+            delay(120000);
             break;
         }
         case CANDLE_STATES::DISPENSING:
@@ -129,7 +134,6 @@ void CMStateMachine::nextState() {
         // clean up anything from standby, probably transition ui stuff
             break;
         case CANDLE_STATES::HEATING:
-        
             break;
         case CANDLE_STATES::DISPENSING:
             break;
