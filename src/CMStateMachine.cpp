@@ -78,7 +78,7 @@ int CMStateMachine::go() {
                 Serial.printf("T = %.4f\n", cm_pid->T);
 
                 //create task and pass pointer to state machine to be able to update PID within task
-                xTaskCreate(pidTask, "update PID", 2048, this, 1, &pidTaskHandle);
+                xTaskCreate(pidTask, "update PID", 4096, this, 1, &pidTaskHandle);
             }
             break;
         }
