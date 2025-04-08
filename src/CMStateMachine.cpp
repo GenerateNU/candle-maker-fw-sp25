@@ -9,7 +9,9 @@ std::map<CANDLE_STATES,CANDLE_STATES> candleTransitions = {
     {CANDLE_STATES::WICK_PLACEMENT, CANDLE_STATES::COOLING},
     {CANDLE_STATES::COOLING, CANDLE_STATES::EJECTING},
     {CANDLE_STATES::EJECTING, CANDLE_STATES::STANDBY}
-    };
+};
+
+
 
 //mutex (mutual exclusion) to allow the state machine to access the pid stuff while the pid task is running
 SemaphoreHandle_t errorMutex = xSemaphoreCreateMutex();

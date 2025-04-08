@@ -1,9 +1,9 @@
 #ifndef CMSTATEMACHINE_HPP
 #define CMSTATEMACHINE_HPP
-#include "CandleState.hpp"
+// #include "CandleState.hpp"
 #include "pid.hpp"
 #include <list>
-
+#include <map>
 // constants
 //sampling interval for PID
 const int samplingInterval = 200;
@@ -11,7 +11,17 @@ const int fetPin = 15;
 const int heatingResolution = 8;
 const int heatPwmChannel = 0;
 
+enum CANDLE_STATES {
+    STANDBY,
+    HEATING,
+    DISPENSING,
+    MIXING,
+    WICK_PLACEMENT,
+    COOLING,
+    EJECTING
+};
 
+extern std::map<CANDLE_STATES,CANDLE_STATES> candleTransitions;
 class CMStateMachine {
 
 public:
