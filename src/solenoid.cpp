@@ -1,4 +1,4 @@
-#include "Solenoid.h"
+#include "solenoid.h"
 
 Solenoid::Solenoid(int pin)
 {
