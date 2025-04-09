@@ -10,7 +10,7 @@ class MotorEncoder : public MotorDriver {
     MotorEncoder(int pwmpin, int inAPin, int inBPin,  int encPinA, int encPinB, int gearRatio);
     static void encoderISR();
     int getCurrentPosition();
-    void goToTargetPosition(int speed, bool direction, int targetPosition);
+    void goToTargetPosition(int speed, bool direction, int targetPosition, double gearRatio);
     void moveByRotation(int speed, bool direction, double numRotations, double gearRatio);
     void goHome(int speed);
     volatile int currentPosition;
@@ -26,7 +26,8 @@ class MotorEncoder : public MotorDriver {
     
 
     private:
-    double _targetPosition;
+    int _targetPosition = 0;
+ 
     //int previousEncA;
     //int previousEncB;
     //double targetPosition;

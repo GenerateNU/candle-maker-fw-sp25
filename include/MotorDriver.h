@@ -11,8 +11,9 @@ class MotorDriver {
     void stopMotor();
     int _speed;
     bool _direction;
+    bool running = false;
 
-  private:
+  protected:
     int _pwmPin;
     int _inAPin;
     int _inBPin;

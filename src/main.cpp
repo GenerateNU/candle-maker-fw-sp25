@@ -109,15 +109,44 @@ void loop() {
 #include <MotorEncoder.h>
 MotorEncoder motor(4, 19, 21, 18, 5, 172); // Initialize motor driver with PWM and direction pins
 //MotorDriver motor1(4, 19, 21); // Initialize motor driver with PWM and direction pins
+int _motorON = 0;
+int _motorOFF = 1;
+enum motorState { MOTOR_OFF, MOTOR_ON, MOTOR_DONE };
+motorState state = MOTOR_OFF;
+bool finished = false;
 void setup() {
     Serial.begin(9600);
+    motor.setup(18, 5); // Setup encoder pins
+    // motor.moveByRotation(80, true, 1, 171.79); // Run motor at 80% speed in counter-clockwise direction
+    // delay(3000);
+    // motor.getCurrentPosition(); // Get current position
+}
+void loop() {
+  
+  if (state == MOTOR_OFF){
+     state = MOTOR_ON;
+     motor.moveByRotation(80, true, 1, 171.79); // Run motor at 80% speed in counter-clockwise direction
+     delay(500); 
+     motor.moveByRotation(80, false, 0.5, 171.79); 
+     delay(500);
+     motor.goToTargetPosition(80, false, -4500, 171.79); // Move to target position at 80% speed
+     motor.goHome(80); // Move motor to home position at 80% speed
+  }
+  else if (state == MOTOR_ON) {
+     state = MOTOR_DONE;
+     delay(3000); // Wait for 3 second
+     motor.getCurrentPosition(); // Get current position
+  } 
+  
 }
 
-void loop() {
-  motor.setup(18, 5); // Setup encoder pins
-  motor.moveByRotation(80, true, 1, 171.79); // Run motor at 80% speed in clockwise direction
-  motor.getCurrentPosition(); // Get current position
-}
+
+
+
+
+
+
+
 
 
   
