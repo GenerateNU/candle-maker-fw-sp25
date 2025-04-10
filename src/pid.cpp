@@ -2,16 +2,15 @@
 
 float PID::readThermTemp() {
     float temp = 0;
-    float pinVoltage = analogReadMilliVolts(THERM_PIN) / 1000.0;
-    double rTherm = pinVoltage/(3.3f-pinVoltage) * 51000.0f;
+    float pinVoltage = static_cast<float>(analogReadMilliVolts(THERM_PIN)) / 1000.0f;
+
+    float rTherm = pinVoltage/(3.3f-pinVoltage) * 51000.0f;
     // if temp is under 25 we know resistance will be greater than 30000 ohm
     if (rTherm > 30000.0) {
         temp = 1/(A1[0]+B[0]*log(rTherm/30000.0)+C1[0]*pow(log(rTherm/30000.0),2)+D1[0]*pow(log(rTherm/30000.0),3))-273.15;
-        Serial.println(temp);
     }
     else {
         temp = 1/(A1[1]+B[1]*log(rTherm/30000.0)+C1[1]*pow(log(rTherm/30000.0),2)+D1[1]*pow(log(rTherm/30000.0),3))-273.15;
-        Serial.println(temp);
     }
     return temp;
 }
@@ -59,7 +58,13 @@ PID::PID(float minOut, float maxOut, float setpoint) {
 float PID::update(float setpoint) {
     //current temp is measurement
     // unsigned long startTime = micros();
-    float measurement = readThermTemp();
+    float total = 0.0f;
+    int numSamples = 10;
+    for (int i = 0; i < 10; i++) {
+        total += this->readThermTemp();
+        delay(15);
+    }
+    float measurement = total / numSamples;
     Serial.printf("%.2f deg C, %.2f deg F\n", measurement, measurement*1.8 + 32.0);
 
     error = setpoint - measurement;

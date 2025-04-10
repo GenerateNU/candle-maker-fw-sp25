@@ -10,9 +10,11 @@ CMStateMachine stateMachine;
 void setup() {
   Serial.begin(115200);
   while (!Serial) {}
-  pinMode(fetPin, OUTPUT);
+  analogReadResolution(12);
+  pinMode(DRIVE_PIN, OUTPUT);
+  pinMode(THERM_PIN, INPUT);
   ledcSetup(heatPwmChannel, 1000/samplingInterval, 8);
-  ledcAttachPin(fetPin, heatPwmChannel);
+  ledcAttachPin(DRIVE_PIN, heatPwmChannel);
   Serial.println("setup complete");
   delay(10);
 }
