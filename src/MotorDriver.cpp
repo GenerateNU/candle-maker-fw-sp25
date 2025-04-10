@@ -41,3 +41,9 @@ void MotorDriver::stopMotor() {
     analogWrite(_pwmPin, 0); // Stop motor
     running = false;
 }
+
+void MotorDriver::runForTime(int speed, bool direction, int time) {
+    runMotor(speed, direction);
+    delay(time); // Run for specified time
+    stopMotor(); // Stop motor after time is up
+}

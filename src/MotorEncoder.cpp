@@ -116,3 +116,8 @@ void MotorEncoder::goHome(int speed) {
   stopMotor();
   Serial.println("Motor is at home position.");
 }
+
+void MotorEncoder::resetHome() {
+  currentPosition = 0; // Reset the current position to 0
+  Serial.println("Home position reset");
+}
