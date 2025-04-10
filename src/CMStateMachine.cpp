@@ -88,8 +88,10 @@ int CMStateMachine::go() {
             break;
         }
         case CANDLE_STATES::HEATING: {
+
             //heating screen
             
+
             //Linked list to store previous error over 1 second
             std::list<float> errorList;
             for (int i = 0; i < samplingInterval*2; i++) {
