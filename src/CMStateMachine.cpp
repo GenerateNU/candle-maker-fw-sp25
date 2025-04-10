@@ -1,6 +1,8 @@
 #include "CMStateMachine.hpp"
 
 //consts
+
+//hash map
 std::map<CANDLE_STATES,CANDLE_STATES> candleTransitions = {
     {CANDLE_STATES::STANDBY, CANDLE_STATES::HEATING},
     {CANDLE_STATES::HEATING, CANDLE_STATES::DISPENSING},
@@ -33,7 +35,7 @@ void pidTask(void *parameter) {
             if(xSemaphoreTake(errorMutex, portMAX_DELAY) == pdTRUE) {
                 stateMachine->cm_pid->update(71.1f);
                 int heatDutyCycle = static_cast<int>(stateMachine->cm_pid->out) + 127;
-                ledcWrite(heatPwmChannel, 255);
+                ledcWrite(heatPwmChannel, heatDutyCycle);
                 xSemaphoreGive(errorMutex);
             }
             Serial.println("pid task is running");
@@ -45,6 +47,7 @@ void pidTask(void *parameter) {
     }
   } 
 
+// state machine constructor
 CMStateMachine::CMStateMachine() : cm_pid(nullptr) {
     this->setState(CANDLE_STATES::STANDBY);    
 }
@@ -52,6 +55,8 @@ CMStateMachine::CMStateMachine() : cm_pid(nullptr) {
 int CMStateMachine::go() {
     switch (this->currentState) {
         case CANDLE_STATES::STANDBY: {
+            //standby screen
+
             // cleans up pid stuff when intializing standby state
             if (pidTaskHandle != NULL) {
                 vTaskSuspend(pidTaskHandle);
@@ -83,6 +88,8 @@ int CMStateMachine::go() {
             break;
         }
         case CANDLE_STATES::HEATING: {
+            //heating screen
+            
             //Linked list to store previous error over 1 second
             std::list<float> errorList;
             for (int i = 0; i < samplingInterval*2; i++) {
@@ -113,18 +120,29 @@ int CMStateMachine::go() {
             break;
         }
         case CANDLE_STATES::DISPENSING:
-            //run dispensing motors
+            //dispensing screen    
+        
+            //run dispensing motors for certain amt of time/rotations
             break;
         case CANDLE_STATES::MIXING: 
-            //run mixing motors and stuff
+            //mixing screen
+        
+            //run mixing motors and stuff for amt of time
             break;
         case CANDLE_STATES::WICK_PLACEMENT:
+            //idk
+        
             //move the wick placement stuff around idk
             break;
         case CANDLE_STATES::COOLING:
+            //cooling screen
+            
             //run the fan and stuff
             break;
         case CANDLE_STATES::EJECTING:
+            //ejecting screen
+
+
             break;
     }
     return 0;

@@ -23,6 +23,6 @@ void loop() {
   stateMachine.go();
   int endTime = millis();
   stateMachine.nextState();
-  Serial.printf("loop took %d milliseconds\n", endTime - startTime);
+  Serial.printf("state took %d milliseconds\n", endTime - startTime);
 
 }
