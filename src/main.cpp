@@ -3,8 +3,8 @@
 // You can declare functions at the top!
 
 //therm pin constant
-const int thermistorPin = 35;
-const int sourcePin = 4;
+const int thermistorPin = 4;
+const int sourcePin = 3;
 const float A1[2]	= {0.003353823,	0.003354016};
 const float B[2] = {0.000261843,	0.00026056};
 const float C1[2]	= {3.92E-06,	3.13E-06};
@@ -16,23 +16,24 @@ void setup() {
   Serial.begin(115200);
   // Set the LED pin as an output
   pinMode(thermistorPin, INPUT);
-  pinMode(sourcePin, OUTPUT);
+  // pinMode(sourcePin, OUTPUT);
   Serial.println("setup complete");
 
 }
 
 void loop() {
   double temp = 0;
-  digitalWrite(sourcePin, 255);
-  delayMicroseconds(10000);
+  // digitalWrite(sourcePin, 255);
+  delay(100);
 
   // analog read millivolts -> volts
-  double pinVoltage = analogReadMilliVolts(thermistorPin) / 1000.0;
+  float pinVoltage = static_cast<float>(analogReadMilliVolts(thermistorPin))/1000.0f;
+  
   Serial.print("pinVoltage: ");
   Serial.print(pinVoltage);
 
   // voltage divider equation for applied 3V3
-  double rTherm = 183810.0/pinVoltage - 55700.0;
+  float rTherm = 51500.0f*pinVoltage/(3.3f - pinVoltage);
   Serial.print(" rTherm: ");
   Serial.print(rTherm);
 
@@ -46,7 +47,7 @@ void loop() {
   }
   Serial.print(" temp: ");
   Serial.printf("%.2f deg C, %.2f deg F\n", temp, temp*1.8 + 32.0);
-  digitalWrite(sourcePin, 0);
+  // digitalWrite(sourcePin, 0);
   sleep(10);
 }
 
