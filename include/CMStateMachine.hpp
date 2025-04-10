@@ -33,7 +33,7 @@ public:
     void setState(CANDLE_STATES newState);
     int go();
     PID* cm_pid;
-    LCD
+    // LCDScreen* lcd_screen;
 private:
     CANDLE_STATES currentState{CANDLE_STATES::STANDBY};
 
