@@ -2,23 +2,16 @@
 #define CMSTATEMACHINE_HPP
 // #include "CandleState.hpp"
 #include "pid.hpp"
-#include "solenoid.h"
+#include "LCDScreen.h"
 #include <list>
 #include <map>
 // constants
 //sampling interval for PID
 const int samplingInterval = 200;
-
-//pin for pid output 
 const int fetPin = 15;
-
-//bit depth of heating output
 const int heatingResolution = 8;
-
-//something
 const int heatPwmChannel = 0;
 
-// candle states enum
 enum CANDLE_STATES {
     STANDBY,
     HEATING,
@@ -29,9 +22,7 @@ enum CANDLE_STATES {
     EJECTING
 };
 
-//needed to declare the hash map (defined)
 extern std::map<CANDLE_STATES,CANDLE_STATES> candleTransitions;
-
 class CMStateMachine {
 
 public:
@@ -42,7 +33,7 @@ public:
     void setState(CANDLE_STATES newState);
     int go();
     PID* cm_pid;
-    
+    LCD
 private:
     CANDLE_STATES currentState{CANDLE_STATES::STANDBY};
 
