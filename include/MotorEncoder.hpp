@@ -7,6 +7,7 @@
 class MotorEncoder : public NewMotorDriver {
   public:
     MotorEncoder(int RPWM, int LPWM, int encPinA, int encPinB, int gearRatio);
+    MotorEncoder();
     static void encoderISR();
     int getCurrentPosition();
     void goToTargetPosition(int speed, bool direction, int targetPosition);
