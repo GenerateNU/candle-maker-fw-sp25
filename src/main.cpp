@@ -1,4 +1,4 @@
-#include <Arduino.h>
+//#include <Arduino.h>
 /**
 // Define motor control pins for VNH5019
 const int pwmPin = 4;   // PWM input
@@ -106,8 +106,12 @@ void loop() {
 }
 */
 
+
+
 #include <MotorEncoder.h>
-MotorEncoder motor(4, 19, 21, 18, 5, 172); // Initialize motor driver with PWM and direction pins
+#include <Arduino.h>
+
+MotorEncoder motor(19, 21, 5, 18, 171.79); // Initialize motor driver with PWM and direction pins
 //MotorDriver motor1(4, 19, 21); // Initialize motor driver with PWM and direction pins
 int _motorON = 0;
 int _motorOFF = 1;
@@ -116,21 +120,28 @@ motorState state = MOTOR_OFF;
 bool finished = false;
 void setup() {
     Serial.begin(9600);
-    motor.setup(18, 5); // Setup encoder pins
+    motor.setup(); // Setup encoder pins
     // motor.moveByRotation(80, true, 1, 171.79); // Run motor at 80% speed in counter-clockwise direction
     // delay(3000);
     // motor.getCurrentPosition(); // Get current position
+    // delay(3000);
+    // motor.runMotor(80, true); // Run motor at 80% speed in clockwise direction  
+    // delay(3000);
+    // motor.stopMotor(); // Stop motor
+
 }
 void loop() {
   
   if (state == MOTOR_OFF){
      state = MOTOR_ON;
-     motor.moveByRotation(80, true, 1, 171.79); // Run motor at 80% speed in counter-clockwise direction
+     motor.moveByRotation(80, true, 1); // Run motor at 80% speed in counter-clockwise direction
      delay(500); 
-     motor.moveByRotation(80, false, 0.5, 171.79); 
+     motor.moveByRotation(80, false, 0.5); 
      delay(500);
-     motor.goToTargetPosition(80, false, -4500, 171.79); // Move to target position at 80% speed
+     motor.goToTargetPosition(80, false, -4500); // Move to target position at 80% speed
+     delay(500);
      motor.goHome(80); // Move motor to home position at 80% speed
+     delay(500);
   }
   else if (state == MOTOR_ON) {
      state = MOTOR_DONE;
@@ -141,7 +152,88 @@ void loop() {
 }
 
 
+// #include <Arduino.h>
+// #include <CMStateMachine.hpp>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/** 
+
+
+
+#include <Arduino.h>
+#include "MCPManager.h"
+
+#define LED_PIN 6
+
+MCPManager expander0(0x20); // A0-A2 = 000
+MCPManager expander1(0x21); // A0-A2 = 001
+
+//therm pin constant
+
+
+//CMStateMachine stateMachine;
+
+
+void setup() {
+  Serial.begin(9600); // 115200
+
+    Serial.println("Starting MCP23017 Expanders...");
+
+    if (!expander0.begin()) {
+        Serial.println("Failed to init expander 0");
+        while (1);
+    }
+    if (!expander1.begin()) {
+        Serial.println("Failed to init expander 1");
+        while (1);
+    }
+
+    expander0.setupPin(LED_PIN, OUTPUT);
+    expander1.setupPin(LED_PIN, OUTPUT);
+
+    Serial.println("Expanders ready.");
+  
+  // while (!Serial) {}
+  // pinMode(fetPin, OUTPUT);
+  // ledcSetup(heatPwmChannel, 1000/samplingInterval, 8);
+  // ledcAttachPin(fetPin, heatPwmChannel);
+  // Serial.println("setup complete");
+  // delay(10);
+  
+}
+
+void loop() {
+
+  expander0.togglePin(LED_PIN);
+    expander1.togglePin(LED_PIN);
+    delay(500);
+  
+
+
+  
+  // int startTime = millis();
+  // stateMachine.go();
+  // int endTime = millis();
+  // stateMachine.nextState();
+  // Serial.printf("loop took %d milliseconds\n", endTime - startTime);
+  
+}
+
+*/
 
 
 
