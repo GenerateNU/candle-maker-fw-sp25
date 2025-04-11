@@ -102,7 +102,6 @@ float PID::update(float setpoint) {
     else if (out < limMin) {
         out = limMin;
     }
-    Serial.printf("%0.5f\n", out);
 
     prevError = error;
     prevMeasurement = measurement;

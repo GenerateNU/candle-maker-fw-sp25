@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #ifndef PID_HPP
 #define PID_HPP
-#define THERM_PIN 4
+#define THERM_PIN 12
 
 
 const float A_1[2]	= {0.003353823,	0.003354016};

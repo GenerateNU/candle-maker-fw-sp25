@@ -1,22 +1,65 @@
 #include <Arduino.h>
 #include <CMStateMachine.hpp>
+#include "soc/ledc_reg.h"
+#include "soc/ledc_struct.h"
+#include "driver/ledc.h"
+
 
 // //therm pin constant
 
 
 CMStateMachine stateMachine;
 
+#ifndef LEDC_TIMER0_CONF_REG
+#define LEDC_TIMER0_CONF_REG (DR_REG_LEDC_BASE + 0x08) // Base address + offset for Timer 0 config register
+#endif
+
+void verifyLEDCClockSource() {
+    if (READ_PERI_REG(LEDC_TIMER0_CONF_REG) & (1 << 22)) {
+      Serial.println("LEDC is using REF_TICK clock (1 MHz).");
+  } else {
+      Serial.println("LEDC is using APB clock (80 MHz).");
+  }
+}
+
+void setLEDCClockSource() {
+    uint32_t reg_val = READ_PERI_REG(LEDC_TIMER0_CONF_REG);
+    reg_val |= (1 << 22); // Set bit 22 to use REF_TICK
+    WRITE_PERI_REG(LEDC_TIMER0_CONF_REG, reg_val);
+}
 
 void setup() {
   Serial.begin(115200);
   while (!Serial) {}
-  delay(100);
+  delay(5000);
   analogReadResolution(12);
+
   pinMode(DRIVE_PIN, OUTPUT);
   pinMode(THERM_PIN, INPUT);
-  ledcSetup(heatPwmChannel, 1000/samplingInterval, 8);
-  ledcAttachPin(DRIVE_PIN, heatPwmChannel);
+  // ledcSetup(0, 100, 8);
+  // ledcAttachPin(13, 0);
+  
+  // Use ESP-IDF API to create low speed pwm
+  ledc_timer_config_t ledc_timer = {
+    .speed_mode = LEDC_LOW_SPEED_MODE,
+    .duty_resolution = LEDC_TIMER_8_BIT,
+    .timer_num = LEDC_TIMER_0,
+    .freq_hz = 1000/samplingInterval,
+    .clk_cfg = LEDC_USE_REF_TICK  // Directly specify REF_TICK clock
+  };
+  ledc_timer_config(&ledc_timer);
+
+  ledc_channel_config_t ledc_channel = {
+    .gpio_num = DRIVE_PIN,
+    .speed_mode = LEDC_LOW_SPEED_MODE,
+    .channel = static_cast<ledc_channel_t>(heatPwmChannel),
+    .timer_sel = LEDC_TIMER_0,
+    .duty = 0,
+    .hpoint = 0
+  };
+  ledc_channel_config(&ledc_channel);
   Serial.println("setup complete");
+  verifyLEDCClockSource();
   delay(10);
 }
 

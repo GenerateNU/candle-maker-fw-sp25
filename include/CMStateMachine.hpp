@@ -1,6 +1,6 @@
 #ifndef CMSTATEMACHINE_HPP
 #define CMSTATEMACHINE_HPP
-#define DRIVE_PIN 15
+#define DRIVE_PIN 13
 // #include "CandleState.hpp"
 #include "pid.hpp"
 // #include "LCDScreen.h"

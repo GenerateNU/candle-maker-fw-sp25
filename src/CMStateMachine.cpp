@@ -39,6 +39,8 @@ void pidTask(void *parameter) {
                 stateMachine->cm_pid->update(71.1f);
                 int heatDutyCycle = static_cast<int>(stateMachine->cm_pid->out) + 127;
                 ledcWrite(heatPwmChannel, heatDutyCycle);
+                Serial.printf("%.5f\n", heatDutyCycle);
+
                 xSemaphoreGive(errorMutex);
             }
             Serial.println("pid task is running");
@@ -59,43 +61,43 @@ int CMStateMachine::go() {
     switch (this->currentState) {
         case CANDLE_STATES::STANDBY: {
             //standby screen
-            Serial.begin(9600);
             Serial.println("standby");
             // cleans up pid stuff when intializing standby state
-            // if (pidTaskHandle != NULL) {
-            //     vTaskSuspend(pidTaskHandle);
-            //     pidTaskHandle = NULL;
-            // }
-            // if (cm_pid) {
-            //     delete cm_pid;
-            //     cm_pid = nullptr;
-            //     Serial.println("deleted cm_pid in standby");
-            // }
-            // //screen on,
-            // //poll user input or make it an interrupt,
+            if (pidTaskHandle != NULL) {
+                vTaskSuspend(pidTaskHandle);
+                pidTaskHandle = NULL;
+            }
+            if (cm_pid) {
+                delete cm_pid;
+                cm_pid = nullptr;
+                Serial.println("deleted cm_pid in standby");
+            }
+            //screen on,
+            //poll user input or make it an interrupt,
             
-            // // Shruz just told me the heating should turn on during standby and 
-            // if (!cm_pid) {
-            //     cm_pid = new PID(-127, 128, 55);
-            //     cm_pid->Kp = 8.0f;
-            //     cm_pid->Ki = 0.2f;
-            //     cm_pid->Kd = 0.1f;
-            //     cm_pid->tau = 0.025f;
-            //     cm_pid->limMaxInt = 50.0f;
-            //     cm_pid->limMinInt = -50.0f;
-            //     cm_pid->T = static_cast<float>(samplingInterval) / 1000.0f;
-            //     Serial.printf("T = %.4f\n", cm_pid->T);
+            // Shruz just told me the heating should turn on during standby and 
+            if (!cm_pid) {
+                cm_pid = new PID(-127, 128, 55);
+                cm_pid->Kp = 8.0f;
+                cm_pid->Ki = 0.2f;
+                cm_pid->Kd = 0.1f;
+                cm_pid->tau = 0.025f;
+                cm_pid->limMaxInt = 50.0f;
+                cm_pid->limMinInt = -50.0f;
+                cm_pid->T = static_cast<float>(samplingInterval) / 1000.0f;
+                Serial.printf("T = %.4f\n", cm_pid->T);
 
-            //     //create task and pass pointer to state machine to be able to update PID within task
-            //     xTaskCreate(pidTask, "update PID", 4096, this, 1, &pidTaskHandle);
-            // }
+                //create task and pass pointer to state machine to be able to update PID within task
+                xTaskCreate(pidTask, "update PID", 4096, this, 1, &pidTaskHandle);
+            }
+            delay(2000);
             break;
         }
         case CANDLE_STATES::HEATING: {
 
             //heating screen
             Serial.println("heating");
-
+            delay(2000);
             //Linked list to store previous error over 1 second
             // std::list<float> errorList;
             // for (int i = 0; i < samplingInterval*2; i++) {
