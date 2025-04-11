@@ -1,4 +1,5 @@
 #include "CMStateMachine.hpp"
+#include "PortScreenHome.h"
 
 //consts
 
@@ -56,6 +57,7 @@ int CMStateMachine::go() {
     switch (this->currentState) {
         case CANDLE_STATES::STANDBY: {
             //standby screen
+            displayBasicScreen(tft);
 
             // cleans up pid stuff when intializing standby state
             if (pidTaskHandle != NULL) {
@@ -90,6 +92,7 @@ int CMStateMachine::go() {
         case CANDLE_STATES::HEATING: {
 
             //heating screen
+            displayHeatingScreen(tft);
             
 
             //Linked list to store previous error over 1 second
@@ -123,26 +126,31 @@ int CMStateMachine::go() {
         }
         case CANDLE_STATES::DISPENSING:
             //dispensing screen    
+            displayDispensingScreen(tft);
         
             //run dispensing motors for certain amt of time/rotations
             break;
         case CANDLE_STATES::MIXING: 
             //mixing screen
+            displayMixingScreen(tft);
         
             //run mixing motors and stuff for amt of time
             break;
         case CANDLE_STATES::WICK_PLACEMENT:
             //idk
+            displayWickPlacementScreen(tft);
         
             //move the wick placement stuff around idk
             break;
         case CANDLE_STATES::COOLING:
             //cooling screen
+            displayCoolingScreen(tft);
             
             //run the fan and stuff
             break;
         case CANDLE_STATES::EJECTING:
             //ejecting screen
+            displayEjectingScreen(tft);
 
 
             break;
