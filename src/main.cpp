@@ -77,7 +77,7 @@ void setup() {
 
   // displayHeatingScreen(tft);
   delay(2);
-  // displayBasicScreen(tft);
+  displayBasicScreen(tft);
   // delay(5);
 }
 

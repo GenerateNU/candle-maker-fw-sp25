@@ -105,7 +105,7 @@ void displayHeatingScreen(TFT_eSPI &tft) {
     tft.setTextColor(COLOR_BLACK);
     tft.drawString("Candle Maker", (240 - tft.textWidth("Candle Maker")) / 2, 30);
     tft.setFreeFont(&FreeSans9pt7b); // Font for "Methods"
-    tft.drawString("Let that shit warm", (240 - tft.textWidth("Let that shit warm")) / 2, 70);
+    tft.drawString("Pot is heating...", (240 - tft.textWidth("Pot is heating...")) / 2, 70);
     // Main Section - "SELECT AMOUNT"
     tft.setFreeFont(&FreeSans12pt7b); // Font for "SELECT AMOUNT"
     tft.drawString("HEATING", (240 - tft.textWidth("HEATING")) / 2, 110);

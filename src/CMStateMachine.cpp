@@ -62,7 +62,7 @@ int CMStateMachine::go() {
     switch (this->currentState) {
         case CANDLE_STATES::STANDBY: {
             //standby screen
-            displayBasicScreen(tft);
+            // displayDispensingScreen(tft);
 
             Serial.println("standby");
             // cleans up pid stuff when intializing standby state
@@ -91,6 +91,7 @@ int CMStateMachine::go() {
                 Serial.printf("T = %.4f\n", cm_pid->T);
 
                 //create task and pass pointer to state machine to be able to update PID within task
+                Serial.println("Creating PID task");
                 xTaskCreate(pidTask, "update PID", 4096, this, 1, &pidTaskHandle);
             }
             delay(2000);
@@ -99,7 +100,8 @@ int CMStateMachine::go() {
         case CANDLE_STATES::HEATING: {
 
             //heating screen
-            displayHeatingScreen(tft);
+            // displayHeatingScreen(tft);
+            Serial.println("tried to print heating screen");
             
             Serial.println("heating");
             delay(2000);
@@ -135,7 +137,7 @@ int CMStateMachine::go() {
         case CANDLE_STATES::DISPENSING:
             Serial.println("dispensing");
             //dispensing screen    
-            displayDispensingScreen(tft);
+            // displayDispensingScreen(tft);
         
             // int RPWM1 = 4; // Right PWM pin
             // int LPWM1 = 5; // Left PWM pin
@@ -156,7 +158,7 @@ int CMStateMachine::go() {
             break;
         case CANDLE_STATES::MIXING: 
             //mixing screen
-            displayMixingScreen(tft);
+            // displayMixingScreen(tft);
         
             Serial.println("mixing");
             //run mixing motors and stuff for amt of time
@@ -189,10 +191,13 @@ void CMStateMachine::nextState() {
     switch (this->currentState) {
         case CANDLE_STATES::STANDBY:
         // clean up anything from standby, probably transition ui stuff
+            displayHeatingScreen(tft);
             break;
         case CANDLE_STATES::HEATING:
+            displayDispensingScreen(tft);
             break;
         case CANDLE_STATES::DISPENSING:
+            displayMixingScreen(tft);  
             break;
 
     }
