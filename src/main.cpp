@@ -70,14 +70,14 @@ void setup()
   lv_display_set_buffers(disp, buf1, NULL, LVGL_BUFFER_SIZE * sizeof(lv_color_t), LV_DISPLAY_RENDER_MODE_PARTIAL);
   LCD lcd_screen;
   lv_obj_t* background = lcd_screen.create_background();
-  header();
-  body();
-  bar_color();
+  lcd_screen.header();
+  lcd_screen.body();
+  lcd_screen.bar_color();
   //end screen setup
 
   Serial.println("setup complete");
   delay(10);
-  idle_init();
+  // idle_init();
 }
 
 void loop()

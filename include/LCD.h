@@ -9,6 +9,7 @@
 
 class LCD {
     public: 
+        LCD();
         void header();
         void body();
         void bar_color();

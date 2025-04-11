@@ -97,7 +97,7 @@ int CMStateMachine::go() {
         case CANDLE_STATES::HEATING: {
 
             //heating screen
-            heating_init();
+            // heating_init();
 
             //Linked list to store previous error over 1 second
             std::list<float> errorList;
