@@ -3,10 +3,11 @@
 
  // Declare the static member
 MotorEncoder* MotorEncoder::instance[4] = {nullptr}; // Array to hold instances of MotorEncoder
-MotorEncoder::MotorEncoder (int pwmpin, int inAPin, int inBPin, int encPinA, int encPinB, int gearRatio) : MotorDriver(pwmpin, inAPin, inBPin) { // Initialize MotorDriver with required parameters
+MotorEncoder::MotorEncoder (int RPWM, int LPWM, int encPinA, int encPinB, int gearRatio) : NewMotorDriver(RPWM, LPWM) { // Initialize MotorDriver with required parameters
   int currentPosition = 0;
   _encPinA = encPinA;
   _encPinB = encPinB;
+  _gearRatio = gearRatio;
  
   pinMode(_encPinA, INPUT);
   pinMode(_encPinB, INPUT);
@@ -19,10 +20,11 @@ MotorEncoder::MotorEncoder (int pwmpin, int inAPin, int inBPin, int encPinA, int
 
 }
 
-void MotorEncoder::setup(int encPinA, int encPinB) {
-
-  attachInterrupt(digitalPinToInterrupt(encPinA), encoderISR, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(encPinB), encoderISR, CHANGE);
+void MotorEncoder::setup() {
+_encPinA = this->_encPinA;
+_encPinB = this->_encPinB;
+  attachInterrupt(digitalPinToInterrupt(_encPinA), encoderISR, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(_encPinB), encoderISR, CHANGE);
   //Serial.println(currentPosition); 
   
  
@@ -69,10 +71,9 @@ int MotorEncoder::getCurrentPosition() {
   return currentPosition;
 
 }
-void MotorEncoder::goToTargetPosition(int speed, bool direction, int targetPosition, double gearRatio) {
+void MotorEncoder::goToTargetPosition(int speed, bool direction, int targetPosition) {
   _speed = speed;
   _direction = direction;
-  _gearRatio = gearRatio;
   _targetPosition = targetPosition;
   runMotor(_speed, _direction);
   if(_direction){
@@ -85,20 +86,21 @@ void MotorEncoder::goToTargetPosition(int speed, bool direction, int targetPosit
   }
   
 }
-void MotorEncoder::moveByRotation(int speed, bool direction, double numRotations, double gearRatio) {
+void MotorEncoder::moveByRotation(int speed, bool direction, double numRotations) {
 _direction = direction;
-_gearRatio = gearRatio;
 _speed = speed;
+_gearRatio = this->_gearRatio;
 
   if(_direction){
     _targetPosition = currentPosition + numRotations*_gearRatio*48; // 48 counts per revolution 
+    Serial.println(_gearRatio);
   }
   else{
     _targetPosition = currentPosition - numRotations*_gearRatio*48; // 48 counts per revolution 
   }
   Serial.println("target position: ");
   Serial.println(_targetPosition);
-  goToTargetPosition(_speed, _direction, _targetPosition, _gearRatio);
+  goToTargetPosition(_speed, _direction, _targetPosition);
   
 }
 
