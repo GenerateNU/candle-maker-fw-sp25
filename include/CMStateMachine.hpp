@@ -6,12 +6,15 @@
 #include "LCDScreen.h"
 #include <list>
 #include <map>
+#include "MotorEncoder.hpp"
+#include "MotorDriver.h"
 
 // constants
 //sampling interval for PID
 const int samplingInterval = 200;
 const int heatingResolution = 8;
 const int heatPwmChannel = 0;
+
 
 enum CANDLE_STATES {
     STANDBY,
@@ -34,12 +37,16 @@ public:
     void setState(CANDLE_STATES newState);
     int go();
     PID* cm_pid;
+
+    MotorEncoder* PumpMotor; 
+
     // LCDScreen* lcd_screen;
 private:
     CANDLE_STATES currentState{CANDLE_STATES::STANDBY};
 
     //handle to be able to delete task
     TaskHandle_t pidTaskHandle;
+
 };
 
 #endif

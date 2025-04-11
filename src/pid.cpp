@@ -7,10 +7,10 @@ float PID::readThermTemp() {
     float rTherm = pinVoltage/(3.3f-pinVoltage) * 51000.0f;
     // if temp is under 25 we know resistance will be greater than 30000 ohm
     if (rTherm > 30000.0) {
-        temp = 1/(A1[0]+B[0]*log(rTherm/30000.0)+C1[0]*pow(log(rTherm/30000.0),2)+D1[0]*pow(log(rTherm/30000.0),3))-273.15;
+        temp = 1/(A_1[0]+B[0]*log(rTherm/30000.0)+C1[0]*pow(log(rTherm/30000.0),2)+D1[0]*pow(log(rTherm/30000.0),3))-273.15;
     }
     else {
-        temp = 1/(A1[1]+B[1]*log(rTherm/30000.0)+C1[1]*pow(log(rTherm/30000.0),2)+D1[1]*pow(log(rTherm/30000.0),3))-273.15;
+        temp = 1/(A_1[1]+B[1]*log(rTherm/30000.0)+C1[1]*pow(log(rTherm/30000.0),2)+D1[1]*pow(log(rTherm/30000.0),3))-273.15;
     }
     return temp;
 }

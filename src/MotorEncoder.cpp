@@ -1,8 +1,14 @@
-#include <MotorEncoder.h>
+#include <MotorEncoder.hpp>
 
 
  // Declare the static member
 MotorEncoder* MotorEncoder::instance[4] = {nullptr}; // Array to hold instances of MotorEncoder
+// MotorEncoder::MotorEncoder() : NewMotorDriver() { // Default constructor for MotorEncoder
+//   currentPosition = 0;
+//   _encPinA = 0;
+//   _encPinB = 0;
+//   _gearRatio = 1; // Default gear ratio
+// }
 MotorEncoder::MotorEncoder (int RPWM, int LPWM, int encPinA, int encPinB, int gearRatio) : NewMotorDriver(RPWM, LPWM) { // Initialize MotorDriver with required parameters
   int currentPosition = 0;
   _encPinA = encPinA;
@@ -26,7 +32,7 @@ _encPinB = this->_encPinB;
   attachInterrupt(digitalPinToInterrupt(_encPinA), encoderISR, CHANGE);
   attachInterrupt(digitalPinToInterrupt(_encPinB), encoderISR, CHANGE);
   //Serial.println(currentPosition); 
-  
+  Serial.println("MotorEncoder setup complete");
  
 }
 
@@ -75,8 +81,10 @@ void MotorEncoder::goToTargetPosition(int speed, bool direction, int targetPosit
   _speed = speed;
   _direction = direction;
   _targetPosition = targetPosition;
+  Serial.println(currentPosition);
+  Serial.println(targetPosition);
   runMotor(_speed, _direction);
-  if(_direction){
+  if(!_direction){
     while(currentPosition < _targetPosition);
     stopMotor();
   }
@@ -91,7 +99,7 @@ _direction = direction;
 _speed = speed;
 _gearRatio = this->_gearRatio;
 
-  if(_direction){
+  if(!_direction){
     _targetPosition = currentPosition + numRotations*_gearRatio*48; // 48 counts per revolution 
     Serial.println(_gearRatio);
   }
@@ -107,15 +115,12 @@ _gearRatio = this->_gearRatio;
 void MotorEncoder::goHome(int speed) {
   _speed = speed;
   if(currentPosition > 0){
-    _direction = false; // Move counter-clockwise to home position
+    goToTargetPosition(80, true, 0); // Move counter-clockwise to home position
   }
   else{
-    _direction = true; // Move clockwise to home position
+    goToTargetPosition(80, false, 0); // Move clockwise to home position
   }
-  runMotor(_speed, _direction);
-
-  while(abs(currentPosition)>0); // Wait until the motor reaches home position
-  stopMotor();
+  
   Serial.println("Motor is at home position.");
 }
 

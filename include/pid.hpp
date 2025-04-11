@@ -4,7 +4,7 @@
 #define THERM_PIN 4
 
 
-const float A1[2]	= {0.003353823,	0.003354016};
+const float A_1[2]	= {0.003353823,	0.003354016};
 const float B[2] = {0.000261843,	0.00026056};
 const float C1[2]	= {3.92E-06,	3.13E-06};
 const float D1[2] = {1.40E-07,	9.84E-08};
