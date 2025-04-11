@@ -10,6 +10,7 @@ CMStateMachine stateMachine;
 void setup() {
   Serial.begin(115200);
   while (!Serial) {}
+  delay(100);
   analogReadResolution(12);
   pinMode(DRIVE_PIN, OUTPUT);
   pinMode(THERM_PIN, INPUT);
