@@ -1,4 +1,6 @@
 #include "CMStateMachine.hpp"
+#include "LCD.h"
+
 
 //consts
 
@@ -50,12 +52,17 @@ void pidTask(void *parameter) {
 // state machine constructor
 CMStateMachine::CMStateMachine() : cm_pid(nullptr) {
     this->setState(CANDLE_STATES::STANDBY);    
+    // background = create_background();
+    // header();
+    // body();
+    // bar_color();
 }
 
 int CMStateMachine::go() {
     switch (this->currentState) {
         case CANDLE_STATES::STANDBY: {
             //standby screen
+            // idle_init();
 
             // cleans up pid stuff when intializing standby state
             if (pidTaskHandle != NULL) {
@@ -90,7 +97,7 @@ int CMStateMachine::go() {
         case CANDLE_STATES::HEATING: {
 
             //heating screen
-            
+            heating_init();
 
             //Linked list to store previous error over 1 second
             std::list<float> errorList;

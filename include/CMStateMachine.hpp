@@ -1,9 +1,8 @@
 #ifndef CMSTATEMACHINE_HPP
 #define CMSTATEMACHINE_HPP
-#define DRIVE_PIN 15
-// #include "CandleState.hpp"
+#define DRIVE_PIN 7
 #include "pid.hpp"
-#include "LCDScreen.h"
+#include "LCD.h"
 #include <list>
 #include <map>
 
@@ -11,7 +10,7 @@
 //sampling interval for PID
 const int samplingInterval = 200;
 const int heatingResolution = 8;
-const int heatPwmChannel = 0;
+const int heatPwmChannel = 1;
 
 enum CANDLE_STATES {
     STANDBY,
