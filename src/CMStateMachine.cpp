@@ -1,4 +1,5 @@
 #include "CMStateMachine.hpp"
+#include "PortScreenHome.h"
 #include "MotorEncoder.hpp"
 #include "MotorDriver.h"
 
@@ -61,6 +62,8 @@ int CMStateMachine::go() {
     switch (this->currentState) {
         case CANDLE_STATES::STANDBY: {
             //standby screen
+            displayBasicScreen(tft);
+
             Serial.println("standby");
             // cleans up pid stuff when intializing standby state
             if (pidTaskHandle != NULL) {
@@ -96,6 +99,8 @@ int CMStateMachine::go() {
         case CANDLE_STATES::HEATING: {
 
             //heating screen
+            displayHeatingScreen(tft);
+            
             Serial.println("heating");
             delay(2000);
             //Linked list to store previous error over 1 second
@@ -130,6 +135,8 @@ int CMStateMachine::go() {
         case CANDLE_STATES::DISPENSING:
             Serial.println("dispensing");
             //dispensing screen    
+            displayDispensingScreen(tft);
+        
             // int RPWM1 = 4; // Right PWM pin
             // int LPWM1 = 5; // Left PWM pin
             // int encPinA1 = 6; // Encoder pin A
@@ -149,21 +156,28 @@ int CMStateMachine::go() {
             break;
         case CANDLE_STATES::MIXING: 
             //mixing screen
+            displayMixingScreen(tft);
+        
             Serial.println("mixing");
             //run mixing motors and stuff for amt of time
             break;
         case CANDLE_STATES::WICK_PLACEMENT:
             //idk
+            displayWickPlacementScreen(tft);
+        
             Serial.println("wick placement");
             //move the wick placement stuff around idk
             break;
         case CANDLE_STATES::COOLING:
             //cooling screen
+            displayCoolingScreen(tft);
+            
             Serial.println("cooling");
             //run the fan and stuff
             break;
         case CANDLE_STATES::EJECTING:
             //ejecting screen
+            displayEjectingScreen(tft);
 
 
             break;

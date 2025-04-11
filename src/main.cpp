@@ -5,7 +5,14 @@
 #include "driver/ledc.h"
 
 
-// //therm pin constant
+// screen shit
+#include <SPI.h>
+#include <TFT_eSPI.h>
+#include "PortScreenHome.h"
+TFT_eSPI tft = TFT_eSPI(TFT_WIDTH, TFT_HEIGHT);  // Create display object
+
+
+//therm pin constant
 
 
 CMStateMachine stateMachine;
@@ -61,6 +68,17 @@ void setup() {
   Serial.println("setup complete");
   verifyLEDCClockSource();
   delay(10);
+  
+  // init TFT screen
+  tft.init();             // Initialize the display
+  tft.setRotation(0);     // Set rotation (adjust as necessary)
+
+  tft.fillScreen(TFT_BROWN); // Background color
+
+  // displayHeatingScreen(tft);
+  delay(2);
+  // displayBasicScreen(tft);
+  // delay(5);
 }
 
 void loop() {
