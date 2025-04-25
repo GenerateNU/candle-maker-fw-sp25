@@ -191,13 +191,13 @@ void CMStateMachine::nextState() {
     switch (this->currentState) {
         case CANDLE_STATES::STANDBY:
         // clean up anything from standby, probably transition ui stuff
-            displayHeatingScreen(tft);
+            // displayHeatingScreen(tft);
             break;
         case CANDLE_STATES::HEATING:
-            displayDispensingScreen(tft);
+            // displayDispensingScreen(tft);
             break;
         case CANDLE_STATES::DISPENSING:
-            displayMixingScreen(tft);  
+            // displayMixingScreen(tft);  
             break;
 
     }

@@ -9,7 +9,6 @@
 // Declare external TFT object to ensure no redefinition
 extern TFT_eSPI tft;
 extern int batteryLevel;
-
 // Function declarations
 // void displayStartScreen();
 void displayBeatingScreen(TFT_eSPI &tft);

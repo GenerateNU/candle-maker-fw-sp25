@@ -5,6 +5,7 @@
 #include "driver/ledc.h"
 
 
+
 // screen shit
 #include <SPI.h>
 #include <TFT_eSPI.h>
@@ -21,20 +22,6 @@ CMStateMachine stateMachine;
 #define LEDC_TIMER0_CONF_REG (DR_REG_LEDC_BASE + 0x08) // Base address + offset for Timer 0 config register
 #endif
 
-void verifyLEDCClockSource() {
-    if (READ_PERI_REG(LEDC_TIMER0_CONF_REG) & (1 << 22)) {
-      Serial.println("LEDC is using REF_TICK clock (1 MHz).");
-  } else {
-      Serial.println("LEDC is using APB clock (80 MHz).");
-  }
-}
-
-void setLEDCClockSource() {
-    uint32_t reg_val = READ_PERI_REG(LEDC_TIMER0_CONF_REG);
-    reg_val |= (1 << 22); // Set bit 22 to use REF_TICK
-    WRITE_PERI_REG(LEDC_TIMER0_CONF_REG, reg_val);
-}
-
 void setup() {
   Serial.begin(115200);
   while (!Serial) {}
@@ -43,8 +30,7 @@ void setup() {
 
   pinMode(DRIVE_PIN, OUTPUT);
   pinMode(THERM_PIN, INPUT);
-  // ledcSetup(0, 100, 8);
-  // ledcAttachPin(13, 0);
+
   
   // Use ESP-IDF API to create low speed pwm
   ledc_timer_config_t ledc_timer = {
@@ -66,7 +52,6 @@ void setup() {
   };
   ledc_channel_config(&ledc_channel);
   Serial.println("setup complete");
-  verifyLEDCClockSource();
   delay(10);
   
   // init TFT screen
@@ -74,11 +59,7 @@ void setup() {
   tft.setRotation(0);     // Set rotation (adjust as necessary)
 
   tft.fillScreen(TFT_BROWN); // Background color
-
-  // displayHeatingScreen(tft);
-  delay(2);
-  displayBasicScreen(tft);
-  // delay(5);
+  vTaskStartScheduler();
 }
 
 void loop() {

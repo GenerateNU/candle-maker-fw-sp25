@@ -79,104 +79,124 @@ void updateValue(TFT_eSPI tft, int value, int battery) {
 //     }
 //     delay(100); // Small delay for smooth updates
 // }
+SemaphoreHandle_t tftMutex = xSemaphoreCreateMutex();
 
 
 void displayBasicScreen(TFT_eSPI &tft) {
-    
-    tft.setRotation(90);     // Set rotation (adjust as necessary)
-    tft.fillScreen(COLOR_BEIGE); // Background color
-    // Header Section
-    tft.setFreeFont(&FreeSansBold18pt7b); // Font for "Candle Maker"
-    tft.setTextColor(COLOR_BLACK);
-    tft.drawString("Candle Maker", (240 - tft.textWidth("Candle Maker")) / 2, 30);
-    tft.setFreeFont(&FreeSans9pt7b); // Font for "Methods"
-    tft.drawString("Make your dumbass candle", (240 - tft.textWidth("Make your dumbass candle")) / 2, 70);
-    // Main Section - "SELECT AMOUNT"
-    tft.setFreeFont(&FreeSans12pt7b); // Font for "SELECT AMOUNT"
-    tft.drawString("PRESS START", (240 - tft.textWidth("PRESS START")) / 2, 110);
+    if (xSemaphoreTake(tftMutex, pdMS_TO_TICKS(50) == pdTRUE)) {
+        tft.setRotation(90);     // Set rotation (adjust as necessary)
+        tft.fillScreen(COLOR_BEIGE); // Background color
+        // Header Section
+        tft.setFreeFont(&FreeSansBold18pt7b); // Font for "Candle Maker"
+        tft.setTextColor(COLOR_BLACK);
+        tft.drawString("Candle Maker", (240 - tft.textWidth("Candle Maker")) / 2, 30);
+        tft.setFreeFont(&FreeSans9pt7b); // Font for "Methods"
+        tft.drawString("Make your dumbass candle", (240 - tft.textWidth("Make your dumbass candle")) / 2, 70);
+        // Main Section - "SELECT AMOUNT"
+        tft.setFreeFont(&FreeSans12pt7b); // Font for "SELECT AMOUNT"
+        tft.drawString("PRESS START", (240 - tft.textWidth("PRESS START")) / 2, 110);
+        xSemaphoreGive(tftMutex);
+    }
 }
 
 void displayHeatingScreen(TFT_eSPI &tft) {
-    
-    tft.setRotation(90);     // Set rotation (adjust as necessary)
-    tft.fillScreen(COLOR_WHITE); // Background color
-    // Header Section
-    tft.setFreeFont(&FreeSansBold18pt7b); // Font for "Candle Maker"
-    tft.setTextColor(COLOR_BLACK);
-    tft.drawString("Candle Maker", (240 - tft.textWidth("Candle Maker")) / 2, 30);
-    tft.setFreeFont(&FreeSans9pt7b); // Font for "Methods"
-    tft.drawString("Pot is heating...", (240 - tft.textWidth("Pot is heating...")) / 2, 70);
-    // Main Section - "SELECT AMOUNT"
-    tft.setFreeFont(&FreeSans12pt7b); // Font for "SELECT AMOUNT"
-    tft.drawString("HEATING", (240 - tft.textWidth("HEATING")) / 2, 110);
+    if (xSemaphoreTake(tftMutex, pdMS_TO_TICKS(50) == pdTRUE)) {
+        tft.setRotation(90);     // Set rotation (adjust as necessary)
+        tft.fillScreen(COLOR_WHITE); // Background color
+        // Header Section
+        tft.setFreeFont(&FreeSansBold18pt7b); // Font for "Candle Maker"
+        tft.setTextColor(COLOR_BLACK);
+        tft.drawString("Candle Maker", (240 - tft.textWidth("Candle Maker")) / 2, 30);
+        tft.setFreeFont(&FreeSans9pt7b); // Font for "Methods"
+        tft.drawString("Pot is heating...", (240 - tft.textWidth("Pot is heating...")) / 2, 70);
+        // Main Section - "SELECT AMOUNT"
+        tft.setFreeFont(&FreeSans12pt7b); // Font for "SELECT AMOUNT"
+        tft.drawString("HEATING", (240 - tft.textWidth("HEATING")) / 2, 110);
+        xSemaphoreGive(tftMutex);
+    }
 }
 
 void displayDispensingScreen(TFT_eSPI &tft){
-    tft.setRotation(90);     // Set rotation (adjust as necessary)
-    tft.fillScreen(COLOR_BEIGE); // Background color
-    // Header Section
-    tft.setFreeFont(&FreeSansBold18pt7b); // Font for "Candle Maker"
-    tft.setTextColor(COLOR_BLACK);
-    tft.drawString("Candle Maker", (240 - tft.textWidth("Candle Maker")) / 2, 30);
-    tft.setFreeFont(&FreeSans9pt7b); // Font for "Methods"
-    tft.drawString("Let that shit dispense", (240 - tft.textWidth("Let that shit dispense")) / 2, 70);
-    // Main Section - "SELECT AMOUNT"
-    tft.setFreeFont(&FreeSans12pt7b); // Font for "SELECT AMOUNT"
-    tft.drawString("DISPENSE", (240 - tft.textWidth("DISPENSE")) / 2, 110);
+    if (xSemaphoreTake(tftMutex, pdMS_TO_TICKS(50) == pdTRUE)) {
+        tft.setRotation(90);     // Set rotation (adjust as necessary)
+        tft.fillScreen(COLOR_BEIGE); // Background color
+        // Header Section
+        tft.setFreeFont(&FreeSansBold18pt7b); // Font for "Candle Maker"
+        tft.setTextColor(COLOR_BLACK);
+        tft.drawString("Candle Maker", (240 - tft.textWidth("Candle Maker")) / 2, 30);
+        tft.setFreeFont(&FreeSans9pt7b); // Font for "Methods"
+        tft.drawString("Let that shit dispense", (240 - tft.textWidth("Let that shit dispense")) / 2, 70);
+        // Main Section - "SELECT AMOUNT"
+        tft.setFreeFont(&FreeSans12pt7b); // Font for "SELECT AMOUNT"
+        tft.drawString("DISPENSE", (240 - tft.textWidth("DISPENSE")) / 2, 110);
+    }
 }
 
 void displayMixingScreen(TFT_eSPI &tft){
-    tft.setRotation(90);     // Set rotation (adjust as necessary)
-    tft.fillScreen(COLOR_WHITE); // Background color
-    // Header Section
-    tft.setFreeFont(&FreeSansBold18pt7b); // Font for "Candle Maker"
-    tft.setTextColor(COLOR_BLACK);
-    tft.drawString("Candle Maker", (240 - tft.textWidth("Candle Maker")) / 2, 30);
-    tft.setFreeFont(&FreeSans9pt7b); // Font for "Methods"
-    tft.drawString("Let that shit mix", (240 - tft.textWidth("Let that shit mix")) / 2, 70);
-    // Main Section - "SELECT AMOUNT"
-    tft.setFreeFont(&FreeSans12pt7b); // Font for "SELECT AMOUNT"
-    tft.drawString("MIXING", (240 - tft.textWidth("MIXING")) / 2, 110);
+    if (xSemaphoreTake(tftMutex, pdMS_TO_TICKS(50) == pdTRUE)) {
+        tft.setRotation(90);     // Set rotation (adjust as necessary)
+        tft.fillScreen(COLOR_WHITE); // Background color
+        // Header Section
+        tft.setFreeFont(&FreeSansBold18pt7b); // Font for "Candle Maker"
+        tft.setTextColor(COLOR_BLACK);
+        tft.drawString("Candle Maker", (240 - tft.textWidth("Candle Maker")) / 2, 30);
+        tft.setFreeFont(&FreeSans9pt7b); // Font for "Methods"
+        tft.drawString("Let that shit mix", (240 - tft.textWidth("Let that shit mix")) / 2, 70);
+        // Main Section - "SELECT AMOUNT"
+        tft.setFreeFont(&FreeSans12pt7b); // Font for "SELECT AMOUNT"
+        tft.drawString("MIXING", (240 - tft.textWidth("MIXING")) / 2, 110);
+        xSemaphoreGive(tftMutex);
+    }
 }
 
 void displayWickPlacementScreen(TFT_eSPI &tft){
-    tft.setRotation(90);     // Set rotation (adjust as necessary)
-    tft.fillScreen(COLOR_WHITE); // Background color
-    // Header Section
-    tft.setFreeFont(&FreeSansBold18pt7b); // Font for "Candle Maker"
-    tft.setTextColor(COLOR_BLACK);
-    tft.drawString("Candle Maker", (240 - tft.textWidth("Candle Maker")) / 2, 30);
-    tft.setFreeFont(&FreeSans9pt7b); // Font for "Methods"
-    tft.drawString("Let that wick place", (240 - tft.textWidth("Let that wick place")) / 2, 70);
-    // Main Section - "SELECT AMOUNT"
-    tft.setFreeFont(&FreeSans12pt7b); // Font for "SELECT AMOUNT"
-    tft.drawString("WICK PLACEMENT", (240 - tft.textWidth("WICK PLACEMENT")) / 2, 110);
+    if (xSemaphoreTake(tftMutex, pdMS_TO_TICKS(50) == pdTRUE)) {
+        tft.setRotation(90);     // Set rotation (adjust as necessary)
+        tft.fillScreen(COLOR_WHITE); // Background color
+        // Header Section
+        tft.setFreeFont(&FreeSansBold18pt7b); // Font for "Candle Maker"
+        tft.setTextColor(COLOR_BLACK);
+        tft.drawString("Candle Maker", (240 - tft.textWidth("Candle Maker")) / 2, 30);
+        tft.setFreeFont(&FreeSans9pt7b); // Font for "Methods"
+        tft.drawString("Let that wick place", (240 - tft.textWidth("Let that wick place")) / 2, 70);
+        // Main Section - "SELECT AMOUNT"
+        tft.setFreeFont(&FreeSans12pt7b); // Font for "SELECT AMOUNT"
+        tft.drawString("WICK PLACEMENT", (240 - tft.textWidth("WICK PLACEMENT")) / 2, 110);
+        xSemaphoreGive(tftMutex);
+    }
 }
 
 void displayCoolingScreen(TFT_eSPI &tft){
-    tft.setRotation(90);     // Set rotation (adjust as necessary)
-    tft.fillScreen(COLOR_WHITE); // Background color
-    // Header Section
-    tft.setFreeFont(&FreeSansBold18pt7b); // Font for "Candle Maker"
-    tft.setTextColor(COLOR_BLACK);
-    tft.drawString("Candle Maker", (240 - tft.textWidth("Candle Maker")) / 2, 30);
-    tft.setFreeFont(&FreeSans9pt7b); // Font for "Methods"
-    tft.drawString("Let that shit cool", (240 - tft.textWidth("Let that shit cool")) / 2, 70);
-    // Main Section - "SELECT AMOUNT"
-    tft.setFreeFont(&FreeSans12pt7b); // Font for "SELECT AMOUNT"
-    tft.drawString("COOLING", (240 - tft.textWidth("COOLING")) / 2, 110);
-}
+    if (xSemaphoreTake(tftMutex, pdMS_TO_TICKS(50) == pdTRUE)) {
+        tft.setRotation(90);     // Set rotation (adjust as necessary)
+        tft.fillScreen(COLOR_WHITE); // Background color
+        // Header Section
+        tft.setFreeFont(&FreeSansBold18pt7b); // Font for "Candle Maker"
+        tft.setTextColor(COLOR_BLACK);
+        tft.drawString("Candle Maker", (240 - tft.textWidth("Candle Maker")) / 2, 30);
+        tft.setFreeFont(&FreeSans9pt7b); // Font for "Methods"
+        tft.drawString("Let that shit cool", (240 - tft.textWidth("Let that shit cool")) / 2, 70);
+        // Main Section - "SELECT AMOUNT"
+        tft.setFreeFont(&FreeSans12pt7b); // Font for "SELECT AMOUNT"
+        tft.drawString("COOLING", (240 - tft.textWidth("COOLING")) / 2, 110);
+        xSemaphoreGive(tftMutex);
+    }
+}   
 
 void displayEjectingScreen(TFT_eSPI &tft){
-    tft.setRotation(90);     // Set rotation (adjust as necessary)
-    tft.fillScreen(COLOR_WHITE); // Background color
-    // Header Section
-    tft.setFreeFont(&FreeSansBold18pt7b); // Font for "Candle Maker"
-    tft.setTextColor(COLOR_BLACK);
-    tft.drawString("Candle Maker", (240 - tft.textWidth("Candle Maker")) / 2, 30);
-    tft.setFreeFont(&FreeSans9pt7b); // Font for "Methods"
-    tft.drawString("Let that shit eject", (240 - tft.textWidth("Let that shit eject")) / 2, 70);
-    // Main Section - "SELECT AMOUNT"
-    tft.setFreeFont(&FreeSans12pt7b); // Font for "SELECT AMOUNT"
-    tft.drawString("EJECTING", (240 - tft.textWidth("EJECTING")) / 2, 110);
+    if (xSemaphoreTake(tftMutex, pdMS_TO_TICKS(50) == pdTRUE)) {
+
+        tft.setRotation(90);     // Set rotation (adjust as necessary)
+        tft.fillScreen(COLOR_WHITE); // Background color
+        // Header Section
+        tft.setFreeFont(&FreeSansBold18pt7b); // Font for "Candle Maker"
+        tft.setTextColor(COLOR_BLACK);
+        tft.drawString("Candle Maker", (240 - tft.textWidth("Candle Maker")) / 2, 30);
+        tft.setFreeFont(&FreeSans9pt7b); // Font for "Methods"
+        tft.drawString("Let that shit eject", (240 - tft.textWidth("Let that shit eject")) / 2, 70);
+        // Main Section - "SELECT AMOUNT"
+        tft.setFreeFont(&FreeSans12pt7b); // Font for "SELECT AMOUNT"
+        tft.drawString("EJECTING", (240 - tft.textWidth("EJECTING")) / 2, 110);
+        xSemaphoreGive(tftMutex);
+    }
 }

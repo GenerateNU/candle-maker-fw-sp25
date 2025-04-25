@@ -62,7 +62,7 @@ float PID::update(float setpoint) {
     int numSamples = 10;
     for (int i = 0; i < 10; i++) {
         total += this->readThermTemp();
-        delay(15);
+        vTaskDelay(pdMS_TO_TICKS(15));
     }
     float measurement = total / numSamples;
     Serial.printf("%.2f deg C, %.2f deg F\n", measurement, measurement*1.8 + 32.0);
